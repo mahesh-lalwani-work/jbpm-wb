@@ -43,6 +43,9 @@ public class ProcessFormsValuesProcessor extends KieWorkbenchFormsValuesProcesso
     private static final Logger logger = LoggerFactory.getLogger(ProcessFormsValuesProcessor.class);
 
     @Inject
+    private org.jbpm.workbench.forms.display.backend.processor.MaskedInputFieldProcessor maskedInputFieldProcessor;
+
+    @Inject
     public ProcessFormsValuesProcessor(FormDefinitionSerializer formSerializer,
                                        BackendFormRenderingContextManager contextManager,
                                        DynamicBPMNFormGenerator dynamicBPMNFormGenerator) {
@@ -64,11 +67,32 @@ public class ProcessFormsValuesProcessor extends KieWorkbenchFormsValuesProcesso
         if (isValid(form)) {
             BusinessProcessFormModel model = (BusinessProcessFormModel) form.getModel();
 
+            // Process MaskedInputText fields
+            processFormValues(values, form);
+
             values.entrySet().stream().allMatch(entry -> model.getProperties().stream().filter(variable -> variable.getName().equals(
                     entry.getKey())).findFirst().isPresent());
             return values;
         }
         throw new IllegalArgumentException("Form not valid to start process");
+    }
+
+    /**
+     * Process form values including MaskedInputText field processing
+     */
+    private void processFormValues(Map<String, Object> values, FormDefinition form) {
+        if (maskedInputFieldProcessor != null) {
+            form.getFields().forEach(field -> {
+                if (maskedInputFieldProcessor.supports(field)) {
+                    String fieldName = field.getBinding();
+                    if (fieldName != null && values.containsKey(fieldName)) {
+                        Object processedValue = maskedInputFieldProcessor.processFieldValue(field, values, fieldName);
+                        values.put(fieldName, processedValue);
+                        logger.debug("Processed MaskedInputText field '{}' with value: {}", fieldName, processedValue);
+                    }
+                }
+            });
+        }
     }
 
     @Override

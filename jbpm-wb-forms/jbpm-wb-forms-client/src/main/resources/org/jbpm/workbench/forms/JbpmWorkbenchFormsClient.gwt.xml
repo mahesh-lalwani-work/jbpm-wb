@@ -41,5 +41,11 @@
   <inherits name="org.gwtbootstrap3.extras.select.SelectNoResources"/>
 
   <source path="client"/>
+  
+  <!-- Include MaskedInputField templates -->
+  <source path="org/jbpm/workbench/forms/client/modeler"/>
+  
+  <!-- Expose static resources (e.g., masked-input.js) as public so they are served at module base URL -->
+  <public path="org/jbpm/workbench/forms/client/resources"/>
 
 </module>
