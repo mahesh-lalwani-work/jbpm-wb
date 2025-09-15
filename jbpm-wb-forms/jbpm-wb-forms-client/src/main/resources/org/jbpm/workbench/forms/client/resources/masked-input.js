@@ -15,8 +15,8 @@
  */
 
 /**
- * MaskedInputText field handler
- * Provides client-side masking functionality for MaskedInputText fields
+ * MaskedTextBox field handler
+ * Provides client-side masking functionality for MaskedTextBox fields
  */
 (function() {
     'use strict';
@@ -24,16 +24,15 @@
     // Initialize masked input fields when the page loads
     document.addEventListener('DOMContentLoaded', function() {
         try {
-            console.log('MaskedTextBox field initialized successfully');
-        } catch (e) {}
-        try {
             renamePaletteItems();
         } catch (e) {}
         initializeMaskedInputFields();
         
-        // Debug: Check if MaskedInputText appears anywhere
+        // Initialize MaskedTextBox dropdowns
         setTimeout(function() {
-            debugFieldTypes();
+            try {
+                forceAddMaskedTextBoxToDropdowns();
+            } catch (e) {}
         }, 2000);
     });
 
@@ -46,6 +45,16 @@
                         if (node.nodeType === 1) { // Element node
                             try { renamePaletteItems(node); } catch (e) {}
                             initializeMaskedInputFields(node);
+                            
+                            // Special handling for modal dialogs (field properties)
+                            if (node.classList && (node.classList.contains('modal') || node.querySelector('.modal'))) {
+                                setTimeout(function() {
+                                    try {
+                                        handleFieldTypeDropdowns(node);
+                                        forceAddMaskedTextBoxToDropdowns();
+                                    } catch (e) {}
+                                }, 100);
+                            }
                         }
                     });
                 }
@@ -59,7 +68,6 @@
     }
 
     function renamePaletteItems(container) {
-        console.log('renamePaletteItems called.');
         container = container || document;
         var targets = [
             { find: 'MaskedInputText', replace: 'MaskedTextBox' },
@@ -78,25 +86,23 @@
                 if (txt === targets[t].find) {
                     el.textContent = targets[t].replace;
                     el.setAttribute('data-renamed', 'true');
-                    console.log('Renamed "' + targets[t].find + '" to "' + targets[t].replace + '"');
                     break;
                 }
             }
             
             // Also check option elements in select dropdowns
-            if (el.tagName === 'OPTION' || el.tagName === 'SELECT') {
+            if (el.tagName === 'OPTION') {
                 for (var t = 0; t < targets.length; t++) {
-                    if (el.value === targets[t].find) {
-                        el.value = targets[t].replace;
-                        console.log('Renamed option value "' + targets[t].find + '" to "' + targets[t].replace + '"');
-                    }
                     if (txt === targets[t].find) {
                         el.textContent = targets[t].replace;
-                        console.log('Renamed option text "' + targets[t].find + '" to "' + targets[t].replace + '"');
+                        break;
                     }
                 }
             }
         }
+        
+        // Special handling for field type dropdowns
+        handleFieldTypeDropdowns(container);
         
         // Run again after a delay to catch dynamically loaded content
         setTimeout(function() {
@@ -122,18 +128,52 @@
                 if (txt === targets[t].find) {
                     el.textContent = targets[t].replace;
                     el.setAttribute('data-renamed', 'true');
-                    console.log('Delayed rename: "' + targets[t].find + '" to "' + targets[t].replace + '"');
                     break;
                 }
             }
         }
     }
 
+    function handleFieldTypeDropdowns(container) {
+        container = container || document;
+        
+        // Find field type dropdowns (commonly have id="fieldType" or similar)
+        var fieldTypeSelects = container.querySelectorAll('select[id*="fieldType"], select[id*="FieldType"], .field-type-select');
+        
+        fieldTypeSelects.forEach(function(select) {
+            // Check if this dropdown has MaskedTextBox option
+            var options = select.querySelectorAll('option');
+            var hasMaskedTextBox = false;
+            var maskedTextBoxOption = null;
+            
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var value = option.value || '';
+                var text = (option.textContent || '').trim();
+                
+                if (value === 'MaskedTextBox' || text === 'MaskedTextBox') {
+                    hasMaskedTextBox = true;
+                    maskedTextBoxOption = option;
+                    break;
+                }
+            }
+            
+            // If the select currently has MaskedTextBox selected but it's not showing as selected,
+            // try to fix the selection
+            if (hasMaskedTextBox && maskedTextBoxOption) {
+                var currentValue = select.value;
+                if (currentValue === 'MaskedTextBox' && select.selectedIndex !== maskedTextBoxOption.index) {
+                    select.selectedIndex = maskedTextBoxOption.index;
+                }
+            }
+        });
+    }
+
     function initializeMaskedInputFields(container) {
         container = container || document;
         
         // Find all input fields that should be masked
-        var inputs = container.querySelectorAll('input[data-field-type="MaskedInputText"], input.masked-input-text-field');
+        var inputs = container.querySelectorAll('input[data-field-type="MaskedTextBox"], input.masked-input-text-field');
         
         inputs.forEach(function(input) {
             if (!input.hasAttribute('data-masked-initialized')) {
@@ -149,9 +189,12 @@
         
         // Get masking configuration from data attributes
         var maskingCharacter = input.getAttribute('data-masking-character') || '*';
-        var maskingStartIndex = parseInt(input.getAttribute('data-masking-start-index')) || null;
-        var maskingFromStartLength = parseInt(input.getAttribute('data-masking-from-start-length')) || null;
-        var maskingFromEndLength = parseInt(input.getAttribute('data-masking-from-end-length')) || null;
+        var maskingStartIndexAttr = input.getAttribute('data-masking-start-index');
+        var maskingStartIndex = maskingStartIndexAttr !== null ? parseInt(maskingStartIndexAttr) : null;
+        var maskingFromStartLengthAttr = input.getAttribute('data-masking-from-start-length');
+        var maskingFromStartLength = maskingFromStartLengthAttr !== null ? parseInt(maskingFromStartLengthAttr) : null;
+        var maskingFromEndLengthAttr = input.getAttribute('data-masking-from-end-length');
+        var maskingFromEndLength = maskingFromEndLengthAttr !== null ? parseInt(maskingFromEndLengthAttr) : null;
         var isMaskedInDB = input.getAttribute('data-is-masked-in-db') === 'true';
         
         // Apply initial masking if configured
@@ -213,7 +256,7 @@
         var maskedValue = value;
         
         // Apply masking from start index
-        if (maskingStartIndex !== null && maskingFromStartLength !== null) {
+        if (maskingStartIndex !== null && maskingStartIndex !== undefined && maskingFromStartLength !== null && maskingFromStartLength !== undefined) {
             var startIndex = Math.min(maskingStartIndex, value.length);
             var endIndex = Math.min(startIndex + maskingFromStartLength, value.length);
             
@@ -223,7 +266,7 @@
         }
         
         // Apply masking from end
-        if (maskingFromEndLength !== null) {
+        if (maskingFromEndLength !== null && maskingFromEndLength !== undefined && maskingFromEndLength > 0) {
             var startIndex = Math.max(0, maskedValue.length - maskingFromEndLength);
             maskedValue = maskedValue.substring(0, startIndex) + 
                          maskingCharacter.repeat(maskedValue.length - startIndex);
@@ -232,53 +275,51 @@
         return maskedValue;
     }
 
-    function debugFieldTypes() {
-        console.log('=== DEBUG: Checking for MaskedInputText/MaskedTextBox ===');
+
+    // Expose functions globally for manual initialization
+    window.initializeMaskedInputFields = initializeMaskedInputFields;
+    window.handleFieldTypeDropdowns = handleFieldTypeDropdowns;
+    
+    // Add a global function to force fix dropdown selection
+    // Function to force-add MaskedTextBox to field type dropdowns if missing
+    function forceAddMaskedTextBoxToDropdowns() {
+        var dropdowns = document.querySelectorAll('select[id*="fieldType"], select[id*="FieldType"], .field-type-select');
         
-        // Check palette items
-        var paletteItems = document.querySelectorAll('.palette-item, .form-control-item, .field-type-item');
-        console.log('Found ' + paletteItems.length + ' palette items');
-        for (var i = 0; i < paletteItems.length; i++) {
-            var item = paletteItems[i];
-            var text = (item.textContent || '').trim();
-            if (text.toLowerCase().indexOf('masked') !== -1) {
-                console.log('Palette item found:', text, item);
-            }
-        }
-        
-        // Check select options
-        var selects = document.querySelectorAll('select');
-        console.log('Found ' + selects.length + ' select elements');
-        for (var i = 0; i < selects.length; i++) {
-            var select = selects[i];
-            var options = select.querySelectorAll('option');
-            for (var j = 0; j < options.length; j++) {
-                var option = options[j];
-                var text = (option.textContent || '').trim();
+        dropdowns.forEach(function(dropdown) {
+            var options = dropdown.querySelectorAll('option');
+            var hasMaskedTextBox = false;
+            var hasTextBox = false;
+            var textBoxOption = null;
+            
+            // Check what options are available
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
                 var value = option.value || '';
-                if (text.toLowerCase().indexOf('masked') !== -1 || value.toLowerCase().indexOf('masked') !== -1) {
-                    console.log('Select option found:', text, value, option);
+                var text = (option.textContent || '').trim();
+                
+                if (value === 'MaskedTextBox' || text === 'MaskedTextBox') {
+                    hasMaskedTextBox = true;
+                } else if (value === 'TextBox' || text === 'TextBox') {
+                    hasTextBox = true;
+                    textBoxOption = option;
                 }
             }
-        }
-        
-        // Check for any element containing "masked"
-        var allElements = document.querySelectorAll('*');
-        var maskedElements = [];
-        for (var i = 0; i < allElements.length; i++) {
-            var el = allElements[i];
-            var text = (el.textContent || '').trim();
-            if (text.toLowerCase().indexOf('maskedinputtext') !== -1 || text.toLowerCase().indexOf('maskedtextbox') !== -1) {
-                maskedElements.push({element: el, text: text});
+            
+            // If MaskedTextBox is missing but TextBox exists, add MaskedTextBox
+            if (!hasMaskedTextBox && hasTextBox && textBoxOption) {
+                var maskedOption = document.createElement('option');
+                maskedOption.value = 'MaskedTextBox';
+                maskedOption.textContent = 'MaskedTextBox';
+                
+                // Insert after TextBox option
+                textBoxOption.parentNode.insertBefore(maskedOption, textBoxOption.nextSibling);
             }
-        }
-        console.log('Found ' + maskedElements.length + ' elements with "masked" text:', maskedElements);
-        
-        console.log('=== END DEBUG ===');
+        });
     }
 
-    // Expose the function globally for manual initialization
-    window.initializeMaskedInputFields = initializeMaskedInputFields;
-    window.debugFieldTypes = debugFieldTypes;
+    window.fixMaskedTextBoxDropdown = function() {
+        handleFieldTypeDropdowns();
+        forceAddMaskedTextBoxToDropdowns();
+    };
 
 })();

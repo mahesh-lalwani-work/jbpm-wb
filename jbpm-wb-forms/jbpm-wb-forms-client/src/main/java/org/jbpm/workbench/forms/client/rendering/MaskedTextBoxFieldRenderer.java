@@ -29,23 +29,23 @@ import org.kie.workbench.common.forms.dynamic.client.rendering.formGroups.FormGr
 import org.kie.workbench.common.forms.dynamic.client.rendering.formGroups.impl.def.DefaultFormGroup;
 import org.kie.workbench.common.forms.dynamic.client.rendering.renderers.RequiresValueConverter;
 import org.kie.workbench.common.forms.dynamic.service.shared.RenderMode;
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedInputText.definition.AbstractMaskedInputTextFieldDefinition;
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedInputText.type.MaskedInputTextFieldType;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedTextBox.definition.AbstractMaskedTextBoxFieldDefinition;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedTextBox.type.MaskedTextBoxFieldType;
 
 /**
- * jBPM-specific renderer for MaskedInputText field
+ * jBPM-specific renderer for MaskedTextBox field
  * Extends the base functionality with jBPM-specific features
  */
 @Dependent
-@Renderer(type = MaskedInputTextFieldType.class)
-public class MaskedInputTextFieldRenderer extends FieldRenderer<AbstractMaskedInputTextFieldDefinition, DefaultFormGroup> implements RequiresValueConverter {
+@Renderer(type = MaskedTextBoxFieldType.class)
+public class MaskedTextBoxFieldRenderer extends FieldRenderer<AbstractMaskedTextBoxFieldDefinition, DefaultFormGroup> implements RequiresValueConverter {
 
     @Inject
     protected TextBox textBox;
 
     @Override
     public String getName() {
-        return "jBPM MaskedInputText";
+        return "MaskedTextBox";
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MaskedInputTextFieldRenderer extends FieldRenderer<AbstractMaskedIn
         // Attach data attributes consumed by masked-input.js and add identifying class
         textBox.addStyleName("masked-input-text-field");
         textBox.addStyleName("jbpm-masked-field"); // jBPM-specific class
-        textBox.getElement().setAttribute("data-field-type", "MaskedInputText");
+        textBox.getElement().setAttribute("data-field-type", "MaskedTextBox");
         textBox.getElement().setAttribute("data-jbpm-field", "true");
 
         if (field.getMaskingCharacter() != null && !field.getMaskingCharacter().isEmpty()) {

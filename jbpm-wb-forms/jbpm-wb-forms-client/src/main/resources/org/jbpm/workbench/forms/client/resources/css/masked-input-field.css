@@ -1,4 +1,4 @@
-/* MaskedInputField styling */
+/* MaskedTextBox styling */
 .masked-input-field {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -29,7 +29,7 @@
     color: #999;
 }
 
-/* Form group styling for masked input fields */
+/* Form group styling for masked text box fields */
 .form-group .masked-input-field {
     width: 100%;
     padding: 8px 12px;

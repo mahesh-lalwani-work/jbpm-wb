@@ -23,25 +23,23 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.kie.workbench.common.forms.editor.client.editor.EditorFieldTypesProvider;
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedInputText.type.MaskedInputTextFieldType;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedTextBox.type.MaskedTextBoxFieldType;
 import org.kie.workbench.common.forms.model.FieldType;
 
 /**
- * Field type provider for MaskedInputText in the jBPM form editor
- * Adds MaskedInputText to the form designer palette
+ * Field type provider for MaskedTextBox in the jBPM form editor
+ * Adds MaskedTextBox to the form designer palette
  */
 @ApplicationScoped
-public class MaskedInputEditorFieldTypeProviderImpl implements EditorFieldTypesProvider {
+public class MaskedTextBoxEditorFieldTypeProviderImpl implements EditorFieldTypesProvider {
 
     private List<FieldType> paletteFieldTypes = new ArrayList<>();
     private List<FieldType> fieldPropertiesFieldTypes = new ArrayList<>();
 
     @PostConstruct
     public void init() {
-        // Add MaskedTextBox to the palette
-        MaskedInputTextFieldType maskedInputTextType = new MaskedInputTextFieldType();
-        paletteFieldTypes.add(maskedInputTextType);
-        fieldPropertiesFieldTypes.add(maskedInputTextType);
+        MaskedTextBoxFieldType maskedTextBoxType = new MaskedTextBoxFieldType();
+        fieldPropertiesFieldTypes.add(maskedTextBoxType);
     }
 
     @Override

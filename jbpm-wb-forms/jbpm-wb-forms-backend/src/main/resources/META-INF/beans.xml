@@ -3,10 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
-    <!-- MaskedInputField Processor Registration -->
-    <bean class="org.jbpm.workbench.forms.display.backend.processor.MaskedInputFieldProcessor" />
+    <!-- MaskedTextBox Processor Registration -->
+    <bean class="org.jbpm.workbench.forms.display.backend.processor.MaskedTextBoxFieldProcessor" />
     
-    <!-- MaskedInputField Validator Registration -->
-    <bean class="org.jbpm.workbench.forms.display.backend.validation.MaskedInputFieldValidator" />
+    <!-- MaskedTextBox Validator Registration -->
+    <bean class="org.jbpm.workbench.forms.display.backend.validation.MaskedTextBoxFieldValidator" />
 
 </beans>

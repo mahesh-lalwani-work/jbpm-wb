@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-/* MaskedInputText field styling */
+/* MaskedTextBox field styling */
 .masked-input-text-field {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -50,38 +50,38 @@
     color: #888;
 }
 
-/* Form field with MaskedInputText type */
-input[data-field-type="MaskedInputText"] {
+/* Form field with MaskedTextBox type */
+input[data-field-type="MaskedTextBox"] {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-input[data-field-type="MaskedInputText"].masked {
+input[data-field-type="MaskedTextBox"].masked {
     background-color: #f9f9f9;
     color: #666;
     font-family: monospace;
 }
 
-input[data-field-type="MaskedInputText"].unmasked {
+input[data-field-type="MaskedTextBox"].unmasked {
     background-color: #fff;
     color: #333;
 }
 
-input[data-field-type="MaskedInputText"]:focus.masked {
+input[data-field-type="MaskedTextBox"]:focus.masked {
     background-color: #fff;
     color: #333;
 }
 
-input[data-field-type="MaskedInputText"]:focus.unmasked {
+input[data-field-type="MaskedTextBox"]:focus.unmasked {
     background-color: #fff;
     color: #333;
 }
 
-input[data-field-type="MaskedInputText"][readonly] {
+input[data-field-type="MaskedTextBox"][readonly] {
     background-color: #f5f5f5;
     cursor: not-allowed;
 }
 
-input[data-field-type="MaskedInputText"][readonly].masked {
+input[data-field-type="MaskedTextBox"][readonly].masked {
     background-color: #f0f0f0;
     color: #888;
 }

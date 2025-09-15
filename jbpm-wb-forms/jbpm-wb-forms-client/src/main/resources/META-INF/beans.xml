@@ -3,10 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
-    <!-- MaskedInputText Field Type Provider for jBPM -->
-    <bean class="org.jbpm.workbench.forms.client.modeler.MaskedInputEditorFieldTypeProviderImpl" />
+    <!-- MaskedTextBox Field Type Provider for jBPM -->
+    <bean class="org.jbpm.workbench.forms.client.modeler.MaskedTextBoxEditorFieldTypeProviderImpl" />
     
-    <!-- MaskedInputText Field Renderer -->
-    <bean class="org.jbpm.workbench.forms.client.rendering.MaskedInputTextFieldRenderer" />
+    <!-- MaskedTextBox Field Renderer -->
+    <bean class="org.jbpm.workbench.forms.client.rendering.MaskedTextBoxFieldRenderer" />
 
 </beans>

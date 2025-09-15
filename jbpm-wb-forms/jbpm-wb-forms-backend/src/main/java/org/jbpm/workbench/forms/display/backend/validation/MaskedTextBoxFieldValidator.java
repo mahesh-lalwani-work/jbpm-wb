@@ -20,19 +20,19 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedInputText.definition.AbstractMaskedInputTextFieldDefinition;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedTextBox.definition.AbstractMaskedTextBoxFieldDefinition;
 import org.kie.workbench.common.forms.model.FieldDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Server-side validator for MaskedInputText fields
+ * Server-side validator for MaskedTextBox fields
  * Validates field values according to the field configuration
  */
 @ApplicationScoped
-public class MaskedInputFieldValidator {
+public class MaskedTextBoxFieldValidator {
 
-    private static final Logger logger = LoggerFactory.getLogger(MaskedInputFieldValidator.class);
+    private static final Logger logger = LoggerFactory.getLogger(MaskedTextBoxFieldValidator.class);
 
     /**
      * Validation result class
@@ -73,11 +73,11 @@ public class MaskedInputFieldValidator {
      * @return ValidationResult containing validation status and errors
      */
     public ValidationResult validate(FieldDefinition fieldDefinition, Object value, String fieldName) {
-        if (!(fieldDefinition instanceof AbstractMaskedInputTextFieldDefinition)) {
+        if (!(fieldDefinition instanceof AbstractMaskedTextBoxFieldDefinition)) {
             return new ValidationResult(true);
         }
 
-        AbstractMaskedInputTextFieldDefinition maskedField = (AbstractMaskedInputTextFieldDefinition) fieldDefinition;
+        AbstractMaskedTextBoxFieldDefinition maskedField = (AbstractMaskedTextBoxFieldDefinition) fieldDefinition;
         ValidationResult result = new ValidationResult(true);
         
         // Handle null/empty values
@@ -128,7 +128,7 @@ public class MaskedInputFieldValidator {
      * @param fieldName The field name
      * @param result The validation result to update
      */
-    private void validateMaskingConfiguration(AbstractMaskedInputTextFieldDefinition field, String fieldName, ValidationResult result) {
+    private void validateMaskingConfiguration(AbstractMaskedTextBoxFieldDefinition field, String fieldName, ValidationResult result) {
         // Validate that if maskingStartIndex is provided, then maskingFromStartLength is also required
         Integer maskingStartIndex = field.getMaskingStartIndex();
         Integer maskingFromStartLength = field.getMaskingFromStartLength();
@@ -184,6 +184,6 @@ public class MaskedInputFieldValidator {
      * @return true if this validator supports the field type
      */
     public boolean supports(FieldDefinition fieldDefinition) {
-        return fieldDefinition instanceof AbstractMaskedInputTextFieldDefinition;
+        return fieldDefinition instanceof AbstractMaskedTextBoxFieldDefinition;
     }
 }

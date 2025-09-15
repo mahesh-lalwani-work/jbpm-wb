@@ -42,10 +42,10 @@
 
   <source path="client"/>
   
-  <!-- Include MaskedInputField templates -->
-  <source path="org/jbpm/workbench/forms/client/modeler"/>
+  <!-- Include MaskedTextBox templates -->
+  <source path="client/modeler"/>
   
   <!-- Expose static resources (e.g., masked-input.js) as public so they are served at module base URL -->
-  <public path="org/jbpm/workbench/forms/client/resources"/>
+  <public path="client/resources"/>
 
 </module>

@@ -18,25 +18,25 @@ package org.jbpm.workbench.forms.display.backend.validation;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedInputText.definition.MaskedInputTextFieldDefinition;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedTextBox.definition.MaskedTextBoxFieldDefinition;
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textBox.definition.TextBoxFieldDefinition;
 
 import static org.junit.Assert.*;
 
-public class MaskedInputFieldValidatorTest {
+public class MaskedTextBoxFieldValidatorTest {
 
-    private MaskedInputFieldValidator validator;
-    private MaskedInputTextFieldDefinition maskedField;
+    private MaskedTextBoxFieldValidator validator;
+    private MaskedTextBoxFieldDefinition maskedField;
 
     @Before
     public void setUp() {
-        validator = new MaskedInputFieldValidator();
-        maskedField = new MaskedInputTextFieldDefinition();
+        validator = new MaskedTextBoxFieldValidator();
+        maskedField = new MaskedTextBoxFieldDefinition();
     }
 
     @Test
     public void testSupports() {
-        assertTrue("Should support MaskedInputTextFieldDefinition", 
+        assertTrue("Should support MaskedTextBoxFieldDefinition", 
                   validator.supports(maskedField));
         assertFalse("Should not support other field types", 
                    validator.supports(new TextBoxFieldDefinition()));
@@ -46,7 +46,7 @@ public class MaskedInputFieldValidatorTest {
     public void testValidateRequiredFieldWithValue() {
         maskedField.setRequired(true);
         
-        MaskedInputFieldValidator.ValidationResult result = validator.validate(maskedField, "test value", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result = validator.validate(maskedField, "test value", "testField");
         
         assertTrue("Should be valid when required field has value", result.isValid());
         assertTrue("Should have no errors", result.getErrors().isEmpty());
@@ -56,7 +56,7 @@ public class MaskedInputFieldValidatorTest {
     public void testValidateRequiredFieldWithoutValue() {
         maskedField.setRequired(true);
         
-        MaskedInputFieldValidator.ValidationResult result = validator.validate(maskedField, null, "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result = validator.validate(maskedField, null, "testField");
         
         assertFalse("Should be invalid when required field is null", result.isValid());
         assertEquals("Should have one error", 1, result.getErrors().size());
@@ -68,7 +68,7 @@ public class MaskedInputFieldValidatorTest {
     public void testValidateRequiredFieldWithEmptyString() {
         maskedField.setRequired(true);
         
-        MaskedInputFieldValidator.ValidationResult result = validator.validate(maskedField, "", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result = validator.validate(maskedField, "", "testField");
         
         assertFalse("Should be invalid when required field is empty", result.isValid());
         assertEquals("Should have one error", 1, result.getErrors().size());
@@ -81,11 +81,11 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMinLength(5);
         
         // Test valid length
-        MaskedInputFieldValidator.ValidationResult result1 = validator.validate(maskedField, "12345", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result1 = validator.validate(maskedField, "12345", "testField");
         assertTrue("Should be valid when value meets min length", result1.isValid());
         
         // Test invalid length
-        MaskedInputFieldValidator.ValidationResult result2 = validator.validate(maskedField, "123", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result2 = validator.validate(maskedField, "123", "testField");
         assertFalse("Should be invalid when value is too short", result2.isValid());
         assertTrue("Error should mention minimum length", 
                   result2.getErrors().get(0).contains("at least"));
@@ -96,11 +96,11 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMaxLength(10);
         
         // Test valid length
-        MaskedInputFieldValidator.ValidationResult result1 = validator.validate(maskedField, "1234567890", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result1 = validator.validate(maskedField, "1234567890", "testField");
         assertTrue("Should be valid when value meets max length", result1.isValid());
         
         // Test invalid length
-        MaskedInputFieldValidator.ValidationResult result2 = validator.validate(maskedField, "12345678901", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result2 = validator.validate(maskedField, "12345678901", "testField");
         assertFalse("Should be invalid when value is too long", result2.isValid());
         assertTrue("Error should mention maximum length", 
                   result2.getErrors().get(0).contains("exceed"));
@@ -114,14 +114,14 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMaskingFromEndLength(2);
         maskedField.setMaskingCharacter("*");
         
-        MaskedInputFieldValidator.ValidationResult result1 = validator.validate(maskedField, "test123", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result1 = validator.validate(maskedField, "test123", "testField");
         assertTrue("Should be valid with proper masking configuration", result1.isValid());
         
         // Test invalid configuration: missing maskingFromStartLength
         maskedField.setMaskingStartIndex(2);
         maskedField.setMaskingFromStartLength(null);
         
-        MaskedInputFieldValidator.ValidationResult result2 = validator.validate(maskedField, "test123", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result2 = validator.validate(maskedField, "test123", "testField");
         assertFalse("Should be invalid when maskingFromStartLength is missing", result2.isValid());
         assertTrue("Error should mention required maskingFromStartLength", 
                   result2.getErrors().get(0).contains("maskingFromStartLength is required"));
@@ -133,7 +133,7 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMaskingStartIndex(-1);
         maskedField.setMaskingFromStartLength(2);
         
-        MaskedInputFieldValidator.ValidationResult result1 = validator.validate(maskedField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result1 = validator.validate(maskedField, "test", "testField");
         assertFalse("Should be invalid with negative maskingStartIndex", result1.isValid());
         assertTrue("Error should mention negative value", 
                   result1.getErrors().get(0).contains("cannot be negative"));
@@ -142,7 +142,7 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMaskingStartIndex(0);
         maskedField.setMaskingFromStartLength(-1);
         
-        MaskedInputFieldValidator.ValidationResult result2 = validator.validate(maskedField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result2 = validator.validate(maskedField, "test", "testField");
         assertFalse("Should be invalid with negative maskingFromStartLength", result2.isValid());
         assertTrue("Error should mention negative value", 
                   result2.getErrors().get(0).contains("cannot be negative"));
@@ -151,7 +151,7 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMaskingFromStartLength(2);
         maskedField.setMaskingFromEndLength(-1);
         
-        MaskedInputFieldValidator.ValidationResult result3 = validator.validate(maskedField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result3 = validator.validate(maskedField, "test", "testField");
         assertFalse("Should be invalid with negative maskingFromEndLength", result3.isValid());
         assertTrue("Error should mention negative value", 
                   result3.getErrors().get(0).contains("cannot be negative"));
@@ -162,13 +162,13 @@ public class MaskedInputFieldValidatorTest {
         // Test valid masking character
         maskedField.setMaskingCharacter("*");
         
-        MaskedInputFieldValidator.ValidationResult result1 = validator.validate(maskedField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result1 = validator.validate(maskedField, "test", "testField");
         assertTrue("Should be valid with single character", result1.isValid());
         
         // Test invalid masking character (multiple characters)
         maskedField.setMaskingCharacter("**");
         
-        MaskedInputFieldValidator.ValidationResult result2 = validator.validate(maskedField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result2 = validator.validate(maskedField, "test", "testField");
         assertFalse("Should be invalid with multiple characters", result2.isValid());
         assertTrue("Error should mention single character requirement", 
                   result2.getErrors().get(0).contains("exactly one character"));
@@ -179,7 +179,7 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMaxLength(10);
         maskedField.setMinLength(15); // Invalid: minLength > maxLength
         
-        MaskedInputFieldValidator.ValidationResult result1 = validator.validate(maskedField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result1 = validator.validate(maskedField, "test", "testField");
         assertFalse("Should be invalid when minLength > maxLength", result1.isValid());
         assertTrue("Error should mention minLength vs maxLength", 
                   result1.getErrors().stream().anyMatch(error -> error.contains("cannot be greater than maxLength")));
@@ -189,7 +189,7 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMaskingStartIndex(0);
         maskedField.setMaskingFromStartLength(15); // Invalid: > maxLength
         
-        MaskedInputFieldValidator.ValidationResult result2 = validator.validate(maskedField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result2 = validator.validate(maskedField, "test", "testField");
         assertFalse("Should be invalid when maskingFromStartLength > maxLength", result2.isValid());
         assertTrue("Error should mention maskingFromStartLength vs maxLength", 
                   result2.getErrors().stream().anyMatch(error -> error.contains("maskingFromStartLength cannot be greater than maxLength")));
@@ -202,7 +202,7 @@ public class MaskedInputFieldValidatorTest {
         maskedField.setMaskingStartIndex(-1);
         maskedField.setMaskingCharacter("**");
         
-        MaskedInputFieldValidator.ValidationResult result = validator.validate(maskedField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result = validator.validate(maskedField, "test", "testField");
         
         assertFalse("Should be invalid with multiple errors", result.isValid());
         assertTrue("Should have multiple errors", result.getErrors().size() > 1);
@@ -212,7 +212,7 @@ public class MaskedInputFieldValidatorTest {
     public void testValidateNonMaskedField() {
         TextBoxFieldDefinition textField = new TextBoxFieldDefinition();
         
-        MaskedInputFieldValidator.ValidationResult result = validator.validate(textField, "test", "testField");
+        MaskedTextBoxFieldValidator.ValidationResult result = validator.validate(textField, "test", "testField");
         
         assertTrue("Should be valid for non-masked fields", result.isValid());
         assertTrue("Should have no errors", result.getErrors().isEmpty());

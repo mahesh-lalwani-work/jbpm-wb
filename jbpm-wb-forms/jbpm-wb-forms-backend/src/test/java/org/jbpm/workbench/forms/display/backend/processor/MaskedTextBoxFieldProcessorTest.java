@@ -21,27 +21,27 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedInputText.definition.MaskedInputTextFieldDefinition;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedTextBox.definition.MaskedTextBoxFieldDefinition;
 import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.textBox.definition.TextBoxFieldDefinition;
 
 import static org.junit.Assert.*;
 
-public class MaskedInputFieldProcessorTest {
+public class MaskedTextBoxFieldProcessorTest {
 
-    private MaskedInputFieldProcessor processor;
-    private MaskedInputTextFieldDefinition maskedField;
+    private MaskedTextBoxFieldProcessor processor;
+    private MaskedTextBoxFieldDefinition maskedField;
     private Map<String, Object> formData;
 
     @Before
     public void setUp() {
-        processor = new MaskedInputFieldProcessor();
-        maskedField = new MaskedInputTextFieldDefinition();
+        processor = new MaskedTextBoxFieldProcessor();
+        maskedField = new MaskedTextBoxFieldDefinition();
         formData = new HashMap<>();
     }
 
     @Test
     public void testSupports() {
-        assertTrue("Should support MaskedInputTextFieldDefinition", 
+        assertTrue("Should support MaskedTextBoxFieldDefinition", 
                   processor.supports(maskedField));
         assertFalse("Should not support other field types", 
                    processor.supports(new TextBoxFieldDefinition()));
@@ -74,12 +74,14 @@ public class MaskedInputFieldProcessorTest {
     public void testProcessFieldValueWithEndMasking() {
         maskedField.setIsMaskedInDB(true);
         maskedField.setMaskingCharacter("#");
+        maskedField.setMaskingStartIndex(null);
+        maskedField.setMaskingFromStartLength(null);
         maskedField.setMaskingFromEndLength(3);
         formData.put("testField", "sensitive");
         
         Object result = processor.processFieldValue(maskedField, formData, "testField");
         
-        assertEquals("Should mask from end", "sensi###", result);
+        assertEquals("Should mask from end", "sensit###", result);
     }
 
     @Test

@@ -19,33 +19,33 @@ package org.jbpm.workbench.forms.display.backend.processor;
 import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 
-import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedInputText.definition.AbstractMaskedInputTextFieldDefinition;
+import org.kie.workbench.common.forms.fields.shared.fieldTypes.basic.maskedTextBox.definition.AbstractMaskedTextBoxFieldDefinition;
 import org.kie.workbench.common.forms.model.FieldDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Backend processor for MaskedInputText fields
+ * Backend processor for MaskedTextBox fields
  * Handles server-side value processing including database masking
  */
 @ApplicationScoped
-public class MaskedInputFieldProcessor {
+public class MaskedTextBoxFieldProcessor {
 
-    private static final Logger logger = LoggerFactory.getLogger(MaskedInputFieldProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(MaskedTextBoxFieldProcessor.class);
 
     /**
-     * Process form values for MaskedInputText fields
+     * Process form values for MaskedTextBox fields
      * @param fieldDefinition The field definition
      * @param formData The form data map
      * @param fieldName The field name
      * @return The processed value
      */
     public Object processFieldValue(FieldDefinition fieldDefinition, Map<String, Object> formData, String fieldName) {
-        if (!(fieldDefinition instanceof AbstractMaskedInputTextFieldDefinition)) {
+        if (!(fieldDefinition instanceof AbstractMaskedTextBoxFieldDefinition)) {
             return formData.get(fieldName);
         }
 
-        AbstractMaskedInputTextFieldDefinition maskedField = (AbstractMaskedInputTextFieldDefinition) fieldDefinition;
+        AbstractMaskedTextBoxFieldDefinition maskedField = (AbstractMaskedTextBoxFieldDefinition) fieldDefinition;
         Object rawValue = formData.get(fieldName);
         
         if (rawValue == null) {
@@ -71,7 +71,7 @@ public class MaskedInputFieldProcessor {
      * @param field The field definition
      * @return The masked value
      */
-    private String applyServerSideMasking(String value, AbstractMaskedInputTextFieldDefinition field) {
+    private String applyServerSideMasking(String value, AbstractMaskedTextBoxFieldDefinition field) {
         if (value == null || value.isEmpty()) {
             return value;
         }
@@ -108,7 +108,7 @@ public class MaskedInputFieldProcessor {
             int startIndex = Math.max(0, maskedValue.length() - maskingFromEndLength);
             StringBuilder sb = new StringBuilder();
             sb.append(maskedValue.substring(0, startIndex));
-            for (int i = 0; i < (maskedValue.length() - startIndex); i++) {
+            for (int i = 0; i < maskingFromEndLength; i++) {
                 sb.append(maskingCharacter);
             }
             maskedValue = sb.toString();
@@ -118,12 +118,12 @@ public class MaskedInputFieldProcessor {
     }
 
     /**
-     * Check if a field definition is a MaskedInputText field
+     * Check if a field definition is a MaskedTextBox field
      * @param fieldDefinition The field definition
-     * @return true if it's a MaskedInputText field
+     * @return true if it's a MaskedTextBox field
      */
     public boolean supports(FieldDefinition fieldDefinition) {
-        return fieldDefinition instanceof AbstractMaskedInputTextFieldDefinition;
+        return fieldDefinition instanceof AbstractMaskedTextBoxFieldDefinition;
     }
 
     /**
@@ -133,7 +133,7 @@ public class MaskedInputFieldProcessor {
      * @param fieldDefinition The field definition
      * @return The original unmasked value (implementation dependent)
      */
-    public String getOriginalValue(String maskedValue, AbstractMaskedInputTextFieldDefinition fieldDefinition) {
+    public String getOriginalValue(String maskedValue, AbstractMaskedTextBoxFieldDefinition fieldDefinition) {
         // In a real implementation, this would retrieve the original value from a secure location
         // For now, we return the masked value as a placeholder
         logger.warn("getOriginalValue called but secure value storage not implemented. Returning masked value.");
