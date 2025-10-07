@@ -31,6 +31,7 @@ public class ManagePreferences implements BasePreference<ManagePreferences> {
     public static String COMPLETED_BORDER_COLOR = "#030303";
     public static String ACTIVE_BORDER_COLOR = "#1e90ff";
     public static String ACTIVE_ASYNC_BORDER_COLOR = "#FF0000";
+    public static String DEFAULT_ALLOWED_FILE_TYPES = "pdf,docx,xlsx,txt,jpg,png";
 
     public static List<Integer> PAGINATION_OPTIONS = Arrays.asList(10, 20, 50, 100);
     public static Integer DEFAULT_PAGINATION_OPTION = 10;
@@ -60,6 +61,10 @@ public class ManagePreferences implements BasePreference<ManagePreferences> {
             formType = PropertyFormType.COLOR)
     private String processInstanceDiagramActiveAsyncNodeBorderColor;
 
+    @Property(bundleKey = "ManagePreferences.AllowedFileTypes", helpBundleKey = "ManagePreferences.AllowedFileTypes.Help",
+            formType = PropertyFormType.TEXT)
+    private String allowedFileTypes;
+
     @Override
     public ManagePreferences defaultValue(final ManagePreferences defaultValue) {
         defaultValue.itemsPerPage = DEFAULT_PAGINATION_OPTION;
@@ -68,6 +73,7 @@ public class ManagePreferences implements BasePreference<ManagePreferences> {
         defaultValue.processInstanceDiagramActiveNodeBorderColor = ACTIVE_BORDER_COLOR;
         defaultValue.processInstanceDiagramActiveAsyncNodeBorderColor = ACTIVE_ASYNC_BORDER_COLOR;
         defaultValue.showTaskCommentsAtWorkTab = true;
+        defaultValue.allowedFileTypes = null;  // Don't set default here - let the loader handle fallback
         return defaultValue;
     }
 
@@ -117,5 +123,13 @@ public class ManagePreferences implements BasePreference<ManagePreferences> {
 
     public String getProcessInstanceDiagramActiveAsyncNodeBorderColor() {
         return processInstanceDiagramActiveAsyncNodeBorderColor;
+    }
+
+    public String getAllowedFileTypes() {
+        return allowedFileTypes;
+    }
+
+    public void setAllowedFileTypes(String allowedFileTypes) {
+        this.allowedFileTypes = allowedFileTypes;
     }
 }
