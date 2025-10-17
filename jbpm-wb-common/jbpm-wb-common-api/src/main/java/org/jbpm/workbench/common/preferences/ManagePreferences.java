@@ -62,7 +62,7 @@ public class ManagePreferences implements BasePreference<ManagePreferences> {
     private String processInstanceDiagramActiveAsyncNodeBorderColor;
 
     @Property(bundleKey = "ManagePreferences.AllowedFileTypes", helpBundleKey = "ManagePreferences.AllowedFileTypes.Help",
-            formType = PropertyFormType.TEXT)
+            formType = PropertyFormType.TEXT, validators = AllowedFileTypesValidator.class)
     private String allowedFileTypes;
 
     @Override
