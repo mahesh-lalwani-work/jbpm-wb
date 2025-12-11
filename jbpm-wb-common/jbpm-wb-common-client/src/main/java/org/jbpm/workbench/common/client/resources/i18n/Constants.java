@@ -177,4 +177,43 @@ public interface Constants extends Messages {
     String SetAsDefaultFilter();
 
     String DefaultFilter();
+    
+    // File Extension Validation Error Codes
+    // Design-Time Errors (001-099)
+    String EXT_VAL_001();
+    
+    String EXT_VAL_002();
+    
+    String EXT_VAL_003();
+    
+    String EXT_VAL_004();
+    
+    // Runtime Errors (101-199)
+    String EXT_VAL_101();
+    
+    String EXT_VAL_102();
+    
+    String EXT_VAL_103();
+    
+    String EXT_VAL_104();
+    
+    String EXT_VAL_105();
+    
+    String EXT_VAL_106();
+    
+    // Process Execution Errors (201-299)
+    String EXT_VAL_201();
+    
+    String EXT_VAL_202();
+    
+    String EXT_VAL_203();
+    
+    String EXT_VAL_204();
+    
+    // API Errors (301-399)
+    String EXT_VAL_301();
+    
+    String EXT_VAL_302();
+    
+    String EXT_VAL_303();
 }

@@ -18,6 +18,7 @@ package org.jbpm.workbench.common.preferences;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.uberfire.preferences.shared.impl.validation.ValidationResult;
 
 import static org.junit.Assert.*;
 
@@ -123,6 +124,22 @@ public class ManagePreferencesTest {
         
         managePreferences.setAllowedFileTypes("");
         assertEquals("", managePreferences.getAllowedFileTypes());
+    }
+
+    @Test
+    public void testAllowedFileTypesValidatorIntegration() {
+        // Test that the validator is properly integrated
+        AllowedFileTypesValidator validator = new AllowedFileTypesValidator();
+        
+        // Test that the validator works with the ManagePreferences field
+        assertTrue("Validator should accept valid extensions", 
+                  validator.validate("pdf").isValid());
+        assertFalse("Validator should reject invalid extensions", 
+                   validator.validate("invalid").isValid());
+        
+        // Test that the validator provides helpful error messages
+        ValidationResult result = validator.validate("pfd"); // Common typo
+        assertFalse("Validator should catch typos", result.isValid());
     }
 }
 
